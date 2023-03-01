@@ -46,7 +46,7 @@
           esxi_hostname: "{{ esxi_hostname }}"
           validate_certs: no
           switch: "{{ student_ID }}"
-          portgroup: "{{ student_ID + '-Mgmt' }}"
+          portgroup: "{{ student_ID + '-SA-Mgmt' }}"
           vlan_id: 10
           security:
               promiscuous_mode: True
@@ -62,7 +62,7 @@
           esxi_hostname: "{{ esxi_hostname }}"
           validate_certs: no
           switch: "{{ student_ID }}"
-          portgroup: "{{ student_ID + '-Storage' }}"
+          portgroup: "{{ student_ID + '-SA-Storage' }}"
           vlan_id: 11
           security:
               promiscuous_mode: True
@@ -78,8 +78,24 @@
           esxi_hostname: "{{ esxi_hostname }}"
           validate_certs: no
           switch: "{{ student_ID }}"
-          portgroup: "{{ student_ID + '-vMotion' }}"
+          portgroup: "{{ student_ID + '-SA-vMotion' }}"
           vlan_id: 12
+          security:
+              promiscuous_mode: True
+              mac_changes: True
+              forged_transmits: True
+      delegate_to: localhost
+
+    - name: Adding Site A Production Portgroup
+      community.vmware.vmware_portgroup:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          esxi_hostname: "{{ esxi_hostname }}"
+          validate_certs: no
+          switch: "{{ student_ID }}"
+          portgroup: "{{ student_ID + '-SA-Prod' }}"
+          vlan_id: 13
           security:
               promiscuous_mode: True
               mac_changes: True
