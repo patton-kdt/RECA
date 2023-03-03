@@ -1,0 +1,100 @@
+## https://docs.ansible.com/ansible/latest/collections/community/vmware/vcenter_folder_module.html#ansible-collections-community-vmware-vcenter-folder-module 
+## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_deploy_ovf_module.html#ansible-collections-community-vmware-vmware-deploy-ovf-module 
+## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_vm_shell_module.html#ansible-collections-community-vmware-vmware-vm-shell-module 
+
+---
+- hosts: localhost
+  
+  vars_files: ./vars.yaml
+  
+  tasks: 
+    - name: Deploy VyOS ova
+      community.vmware.vmware_deploy_ovf:
+          hostname: '{{ vcenter_hostname }}'
+          username: '{{ vcenter_username }}'
+          password: '{{ vcenter_password }}'
+          validate_certs: 'false'
+          datacenter: '{{ datacenter_name }}'
+          folder: "{{ full_folder_prefix + student_ID }}"
+          esxi_hostname: '{{ esxi_hostname }}'
+          datastore: '{{ datastorename }}'
+          name: "{{ student_ID + '-Router' }}"
+          networks: { 'DPG-172.0.10.x': "{{ public_net }}", 'DPG-172.0.20.x': "{{ private_net }}" }
+          power_on: no
+          ovf: /mnt/c/Material/temp-vyos-1.4.ova    
+      delegate_to: localhost
+
+
+    - name: Perform vMotion of virtual machine
+      community.vmware.vmware_vmotion:
+          hostname: '{{ vcenter_hostname }}'
+          username: '{{ vcenter_username }}'
+          password: '{{ vcenter_password }}'
+          validate_certs: 'false'
+          vm_name: "{{ student_ID + '-Router' }}"
+          destination_host: '{{ esxi_hostname }}'
+      delegate_to: localhost
+
+
+    - name: Set the state of a virtual machine to poweron
+      community.vmware.vmware_guest_powerstate:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          validate_certs: 'false'
+          folder: '{{ full_folder_prefix + student_ID }}'
+          name: "{{ student_ID + '-Router' }}"
+          state: powered-on
+      delegate_to: localhost
+
+
+    - name: Waiting 60 seconds for completing bootup
+      wait_for:
+        timeout: 60
+      delegate_to: localhost
+
+
+    - name: VyOS Router Configuration
+      community.vmware.vmware_vm_shell:
+          hostname: '{{ vcenter_hostname }}'
+          username: '{{ vcenter_username }}'
+          password: '{{ vcenter_password }}'
+          validate_certs: 'false'
+          datacenter: '{{ datacenter_name }}'
+          folder: "{{ full_folder_prefix + student_ID }}"
+          vm_id: "{{ student_ID + '-Router' }}"
+          vm_id_type: vm_name
+          vm_username: 'vyos'
+          vm_password: 'vyos'
+          vm_shell: /bin/vbash
+          vm_shell_cwd: "/tmp"
+          vm_shell_args: |-
+            -c "source /opt/vyatta/etc/functions/script-template
+            configure
+            set system login user admin full-name Admin_User
+            set system login user admin authentication plaintext-password VMware1!
+            set service ssh port 22
+            
+            set interfaces ethernet eth0 address dhcp
+            set interfaces ethernet eth0 description Outside
+            set protocols static route 0.0.0.0/0 next-hop 200.200.200.254
+            
+            set system name-server 200.200.200.245
+            set system ntp server kr.pool.ntp.org
+            
+            set interfaces ethernet eth1 vif 101 description 'VLAN 101 - Site A Management'
+            set interfaces ethernet eth1 vif 101 address 10.10.1.1/24
+            set interfaces ethernet eth1 vif 102 description 'VLAN 102 - Site A Storage'
+            set interfaces ethernet eth1 vif 102 address 10.10.2.1/24
+            
+            set nat source rule 100 outbound-interface eth0
+            set nat source rule 100 source address 10.10.1.0/24
+            set nat source rule 100 translation address masquerade
+            
+            commit
+            save"
+          wait_for_process: True
+          timeout: 180
+      delegate_to: localhost
+      register: shell_command_with_wait_timeout
+      
