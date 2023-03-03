@@ -6,6 +6,8 @@ vcenter_hostname: "192.168.3.100"
 vcenter_username: "S00@vclass.reca"
 vcenter_password: "VMware1!"
 
+datacenter_name: "Datacenter"
+
 folder_prefix: "Datacenter/vm/Students/"
 
 # S00, S03, S06, S09, S12, S15, S18, S21, S24 --> esxi_host : 192.168.3.103
