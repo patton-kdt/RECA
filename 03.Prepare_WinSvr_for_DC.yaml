@@ -1,0 +1,76 @@
+## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_guest_module.html#ansible-collections-community-vmware-vmware-guest-module 
+
+---
+- hosts: localhost
+  vars_files: ./vars.yaml
+
+  tasks:
+  - name: Deploy WinSvr VM from Template
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ student_ID + '-DC' }}"
+      state: "poweredon"
+      datacenter: '{{ datacenter_name }}'
+      folder: "{{ folder_prefix + student_ID }}"
+      esxi_hostname: '{{ esxi_hostname }}'
+      datastore: "{{ datastore_name }}"
+      template: "{{ dc_template_name }}"
+      linked_clone: True
+      snapshot_src: "{{ dc_snapshot_src_name }}"
+      networks:
+      - name: "{{ student_ID + '-Mgmt' }}"
+        label: "Network adapter 1"
+        connected: True
+        start_connected: True
+        ip: 10.10.1.2
+        netmask: 255.255.255.0
+        gateway: 10.10.1.1
+        dns_servers: 200.200.200.245
+        type: static
+      customization:
+        password: VMware1!
+      wait_for_customization: yes
+      wait_for_customization_timeout: 360
+    delegate_to: localhost
+    ignore_errors: yes     
+
+
+  - name: Connect Network
+    community.vmware.vmware_guest_network:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      datacenter: "{{ datacenter_name }}"
+      validate_certs: no
+      name: "{{ student_ID + '-DC' }}"
+      label: "Network adapter 1"
+      state: present
+      network_name: "{{ student_ID + '-Mgmt' }}"
+      connected: true
+      start_connected: true
+    delegate_to: localhost
+
+  - name: shutdown VM to change network connection
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ student_ID + '-DC' }}"
+      state: "shutdownguest"
+      state_change_timeout: 60
+    delegate_to: localhost
+
+  - name: Poweron DC VM
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ student_ID + '-DC' }}"
+      state: "poweredon"
+      state_change_timeout: 60
+    delegate_to: localhost
