@@ -37,3 +37,9 @@ dc_snapshot_src_name: "RECA#1"
 # sa_esxi_template_name: "Temp-SA-ESXi-01"
 # sa_esxi_template_name: "Temp-SA-ESXi-02"
 # sa_esxi_template_name: "Temp-SA-ESXi-03"
+
+
+# vcsa_template_name: "Temp-VCSA-ESXi-01"
+# vcsa_template_name: "Temp-VCSA-ESXi-02"
+# vcsa_template_name: "Temp-VCSA-ESXi-03"
+vcsa_snapshot_src_name: "Installed"
