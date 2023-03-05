@@ -8,7 +8,7 @@ vcenter_password: "VMware1!"
 
 datacenter_name: "Datacenter"
 
-folder_prefix: "Datacenter/vm/Students/"
+folder_prefix: "Datacenter/vm/3.Students/"
 
 # S00, S03, S06, S09, S12, S15, S18, S21, S24 --> esxi_host : 192.168.3.103
 # S01, S04, S07, S10, S13, S16, S19, S22, S25 --> esxi_host : 192.168.3.101
