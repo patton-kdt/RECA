@@ -17,7 +17,7 @@
           datacenter: '{{ datacenter_name }}'
           folder: "{{ folder_prefix + student_ID }}"
           esxi_hostname: '{{ esxi_hostname }}'
-          datastore: '{{ datastorename }}'
+          datastore: '{{ datastore_name }}'
           name: "{{ student_ID + '-Router' }}"
           networks: { 'DPG-172.0.10.x': "{{ public_net }}", 'DPG-172.0.20.x': "{{ private_net }}" }
           power_on: no
@@ -42,7 +42,7 @@
           username: "{{ vcenter_username }}"
           password: "{{ vcenter_password }}"
           validate_certs: 'false'
-          folder: '{{ full_folder_prefix + student_ID }}'
+          folder: '{{ folder_prefix + student_ID }}'
           name: "{{ student_ID + '-Router' }}"
           state: powered-on
       delegate_to: localhost
@@ -61,7 +61,7 @@
           password: '{{ vcenter_password }}'
           validate_certs: 'false'
           datacenter: '{{ datacenter_name }}'
-          folder: "{{ full_folder_prefix + student_ID }}"
+          folder: "{{ folder_prefix + student_ID }}"
           vm_id: "{{ student_ID + '-Router' }}"
           vm_id_type: vm_name
           vm_username: 'vyos'
