@@ -21,7 +21,7 @@
       linked_clone: True
       snapshot_src: "{{ dc_snapshot_src_name }}"
       networks:
-      - name: "{{ student_ID + '-Mgmt' }}"
+      - name: "{{ student_ID + '-SA-Mgmt' }}"
         label: "Network adapter 1"
         connected: True
         start_connected: True
@@ -48,7 +48,7 @@
       name: "{{ student_ID + '-DC' }}"
       label: "Network adapter 1"
       state: present
-      network_name: "{{ student_ID + '-Mgmt' }}"
+      network_name: "{{ student_ID + '-SA-Mgmt' }}"
       connected: true
       start_connected: true
     delegate_to: localhost
