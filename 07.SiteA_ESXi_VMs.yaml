@@ -69,8 +69,8 @@
       name: "{{ item }}"
       state: "poweredon"
     loop:
-      - "{{student_ID+'-ESXi-01'}}"
-      - "{{student_ID+'-ESXi-02'}}"
-      - "{{student_ID+'-ESXi-03'}}"
+      - "{{student_ID+'-SA-ESXi-01'}}"
+      - "{{student_ID+'-SA-ESXi-02'}}"
+      - "{{student_ID+'-SA-ESXi-03'}}"
     delegate_to: localhost
   
