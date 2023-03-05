@@ -25,10 +25,10 @@
         label: "Network adapter 1"
         connected: True
         start_connected: True
-        ip: 10.10.1.2
+        ip: 10.10.10.2
         netmask: 255.255.255.0
-        gateway: 10.10.1.1
-        dns_servers: 200.200.200.245
+        gateway: 10.10.10.1
+        dns_servers: 192.168.3.2
         type: static
       customization:
         password: VMware1!
