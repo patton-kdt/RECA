@@ -49,7 +49,7 @@
       validate_certs: no
       name: "{{ item[0] }}"
       label: "{{ item[1] }}"
-      network_name: "{{ student_ID + '-SA-Trunk' }}"
+      network_name: "{{ student_ID + '-Trunk' }}"
       state: present
       force: yes
     with_nested:
