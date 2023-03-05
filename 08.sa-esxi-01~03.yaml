@@ -15,7 +15,7 @@
       folder: "{{ folder_prefix + student_ID }}"
       esxi_hostname: '{{ esxi_hostname }}'
       datastore: "{{ datastore_name }}"
-      template: "{{ sa-esxi_template_name }}"
+      template: "{{ sa_esxi_template_name }}"
     loop:
       - "{{student_ID+'-SA-ESXi-01'}}"
       - "{{student_ID+'-SA-ESXi-02'}}"
