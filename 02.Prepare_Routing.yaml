@@ -15,7 +15,7 @@
           password: '{{ vcenter_password }}'
           validate_certs: 'false'
           datacenter: '{{ datacenter_name }}'
-          folder: "{{ full_folder_prefix + student_ID }}"
+          folder: "{{ folder_prefix + student_ID }}"
           esxi_hostname: '{{ esxi_hostname }}'
           datastore: '{{ datastorename }}'
           name: "{{ student_ID + '-Router' }}"
