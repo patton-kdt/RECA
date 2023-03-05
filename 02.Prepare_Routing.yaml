@@ -77,20 +77,28 @@
             
             set interfaces ethernet eth0 address dhcp
             set interfaces ethernet eth0 description Outside
-            set protocols static route 0.0.0.0/0 next-hop 200.200.200.254
+            set protocols static route 0.0.0.0/0 next-hop 192.168.3.1
             
-            set system name-server 200.200.200.245
+            set system name-server 192.168.3.2
             set system ntp server kr.pool.ntp.org
             
-            set interfaces ethernet eth1 vif 101 description 'VLAN 101 - Site A Management'
-            set interfaces ethernet eth1 vif 101 address 10.10.1.1/24
-            set interfaces ethernet eth1 vif 102 description 'VLAN 102 - Site A Storage'
-            set interfaces ethernet eth1 vif 102 address 10.10.2.1/24
-            
-            set nat source rule 100 outbound-interface eth0
-            set nat source rule 100 source address 10.10.1.0/24
-            set nat source rule 100 translation address masquerade
-            
+            set interfaces ethernet eth1 vif 10 description 'VLAN 10 - Site A Management'
+            set interfaces ethernet eth1 vif 10 address 10.10.10.1/24
+            set interfaces ethernet eth1 vif 11 description 'VLAN 11 - Site A Storage'
+            set interfaces ethernet eth1 vif 11 address 10.10.11.1/24
+            set interfaces ethernet eth1 vif 12 description 'VLAN 12 - Site A vMotion'
+            set interfaces ethernet eth1 vif 12 address 10.10.12.1/24
+            set interfaces ethernet eth1 vif 13 description 'VLAN 13 - Site A Production'
+            set interfaces ethernet eth1 vif 13 address 10.10.13.1/24
+                        
+            set nat source rule 10 outbound-interface eth0
+            set nat source rule 10 source address 10.10.10.0/24
+            set nat source rule 10 translation address masquerade
+
+            set nat source rule 13 outbound-interface eth0
+            set nat source rule 13 source address 10.10.13.0/24
+            set nat source rule 13 translation address masquerade
+
             commit
             save"
           wait_for_process: True
