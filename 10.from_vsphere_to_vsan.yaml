@@ -1,0 +1,126 @@
+---
+- hosts: localhost
+  vars_files: ./vars.yaml
+
+  tasks: 
+    - name: Adding Site B Management Portgroup
+      community.vmware.vmware_portgroup:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          esxi_hostname: "{{ esxi_hostname }}"
+          validate_certs: no
+          switch: "{{ student_ID }}"
+          portgroup: "{{ student_ID + '-SB-Mgmt' }}"
+          vlan_id: 20
+          security:
+              promiscuous_mode: True
+              mac_changes: True
+              forged_transmits: True
+      delegate_to: localhost
+
+    - name: Adding Site B Storage Portgroup
+      community.vmware.vmware_portgroup:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          esxi_hostname: "{{ esxi_hostname }}"
+          validate_certs: no
+          switch: "{{ student_ID }}"
+          portgroup: "{{ student_ID + '-SB-Storage' }}"
+          vlan_id: 21
+          security:
+              promiscuous_mode: True
+              mac_changes: True
+              forged_transmits: True
+      delegate_to: localhost
+
+    - name: Adding Site B vMotion Portgroup
+      community.vmware.vmware_portgroup:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          esxi_hostname: "{{ esxi_hostname }}"
+          validate_certs: no
+          switch: "{{ student_ID }}"
+          portgroup: "{{ student_ID + '-SB-vMotion' }}"
+          vlan_id: 22
+          security:
+              promiscuous_mode: True
+              mac_changes: True
+              forged_transmits: True
+      delegate_to: localhost
+
+    - name: Adding Site B Production Portgroup
+      community.vmware.vmware_portgroup:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          esxi_hostname: "{{ esxi_hostname }}"
+          validate_certs: no
+          switch: "{{ student_ID }}"
+          portgroup: "{{ student_ID + '-SB-Prod' }}"
+          vlan_id: 23
+          security:
+              promiscuous_mode: True
+              mac_changes: True
+              forged_transmits: True
+      delegate_to: localhost
+
+    - name: Adding vSAN Portgroup
+      community.vmware.vmware_portgroup:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          esxi_hostname: "{{ esxi_hostname }}"
+          validate_certs: no
+          switch: "{{ student_ID }}"
+          portgroup: "{{ student_ID + '-vSAN' }}"
+          security:
+              promiscuous_mode: True
+              mac_changes: True
+              forged_transmits: True
+          vlan_id: 100
+      delegate_to: localhost
+
+
+    - name: VyOS Router Configuration
+      community.vmware.vmware_vm_shell:
+          hostname: '{{ vcenter_hostname }}'
+          username: '{{ vcenter_username }}'
+          password: '{{ vcenter_password }}'
+          validate_certs: 'false'
+          datacenter: '{{ datacenter_name }}'
+          folder: "{{ full_folder_prefix + student_ID }}"
+          vm_id: "{{ student_ID + '-Router' }}"
+          vm_id_type: vm_name
+          vm_username: 'vyos'
+          vm_password: 'vyos'
+          vm_shell: /bin/vbash
+          vm_shell_cwd: "/tmp"
+          vm_shell_args: |-
+            -c "source /opt/vyatta/etc/functions/script-template
+            configure
+           
+            set interfaces ethernet eth1 vif 20 description 'VLAN 20 - Site B Management'
+            set interfaces ethernet eth1 vif 20 address 10.10.20.1/24
+            set interfaces ethernet eth1 vif 21 description 'VLAN 21 - Site B Storage'
+            set interfaces ethernet eth1 vif 21 address 10.10.21.1/24
+            set interfaces ethernet eth1 vif 22 description 'VLAN 22 - Site B vMotion'
+            set interfaces ethernet eth1 vif 22 address 10.10.22.1/24
+            set interfaces ethernet eth1 vif 23 description 'VLAN 23 - Site B Production'
+            set interfaces ethernet eth1 vif 23 address 10.10.23.1/24
+            set interfaces ethernet eth1 vif 30 description 'VLAN 30 - SiteC Management'
+            set interfaces ethernet eth1 vif 30 address 10.10.30.1/24
+            set interfaces ethernet eth1 vif 100 description 'VLAN 100 - vSAN'
+            set interfaces ethernet eth1 vif 100 address 10.10.100.1/24
+            
+            commit
+            save"
+          wait_for_process: True
+          timeout: 180
+      delegate_to: localhost
+      register: shell_command_with_wait_timeout
+
+
+
