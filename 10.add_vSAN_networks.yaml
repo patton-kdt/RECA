@@ -91,7 +91,7 @@
           password: '{{ vcenter_password }}'
           validate_certs: 'false'
           datacenter: '{{ datacenter_name }}'
-          folder: "{{ full_folder_prefix + student_ID }}"
+          folder: "{{ folder_prefix + student_ID }}"
           vm_id: "{{ student_ID + '-Router' }}"
           vm_id_type: vm_name
           vm_username: 'vyos'
