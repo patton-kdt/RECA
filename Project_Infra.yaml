@@ -109,6 +109,8 @@
           set system login user admin authentication plaintext-password VMware1!
           set service ssh port 22
             
+          set system ipv6 disable
+          
           set interfaces ethernet eth0 address dhcp
           set interfaces ethernet eth0 description Outside
           set interfaces ethernet eth0 ipv6 address no-default-link-local
