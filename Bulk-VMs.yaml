@@ -40,7 +40,14 @@
         networks:
         - name: '{{ private_net }}'
           device_type: vmxnet3
+        cdrom:
+        - controller_number: 0
+          unit_number: 0
+          state: present
+          type: iso
+          iso_path: '{{ item.iso }}'
       with_items:
-      - { vmname: "{{ project_id + '-Storage'}}", guest_id: freebsd64Guest, cpus: 4, memory: 16384,  disk_gb: 32 }
+      - { vmname: "{{ project_id + '-Test1'}}", guest_id: freebsd64Guest, cpus: 4, memory: 16384, disk_gb: 32, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
+" }
       delegate_to: localhost
       register: deploy_vm
