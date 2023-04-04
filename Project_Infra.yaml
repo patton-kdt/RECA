@@ -131,7 +131,7 @@
           set service dhcp-server shared-network-name Openshift subnet 10.10.10.0/24 name-server '10.10.10.2'
           set service dhcp-server shared-network-name Openshift subnet 10.10.10.0/24 domain-name 'vclass.local'
           set service dhcp-server shared-network-name Openshift subnet 10.10.10.0/24 range 0 start '10.10.10.30'
-          set service dhcp-server shared-network-name Openshift subnet 10.10.10.0/24 range 0 stop '10.10.10.30'
+          set service dhcp-server shared-network-name Openshift subnet 10.10.10.0/24 range 0 stop '10.10.10.250'
            
           commit
           save"
