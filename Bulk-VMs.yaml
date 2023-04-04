@@ -71,7 +71,7 @@
             name: '{{ public_net }}'
             state: present
             connected: yes
-          - lable: "Network Adapter 2
+          - lable: "Network Adapter 2"
             name: '{{ private_net }}'
             state: present
             connected: yes
