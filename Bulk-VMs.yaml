@@ -67,9 +67,9 @@
         validate_certs: 'false'
         name: "{{ project_id + '-Bastion'}}"
         network_name: '{{ item.network }}'
-        lable: ''{ iem.lable }}'
+        lable: '{{ item.label }}'
         state: present
-        connected: yes
+        force: yes
       with_items:
       - { network: "{{ public_net }}", label: "Network Adapter 1" }
       - { network: "{{ private_net }}", label: "Network Adapter 2" }
