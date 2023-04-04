@@ -70,8 +70,8 @@
         label: '{{ item.label }}'
         state: present
       with_items:
-      - { network: "{{ public_net }}", label: "Network Adapter 1" }
-      - { network: "{{ private_net }}", label: "Network Adapter 2" }
+      - { network: "{{ public_net }}", label: "Network adapter 1" }
+      - { network: "{{ private_net }}", label: "Network adapter 2" }
       delegate_to: localhost
 
     - name: Add Bastion Disks
