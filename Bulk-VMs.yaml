@@ -66,15 +66,13 @@
         password: "{{ vcenter_password }}"
         validate_certs: 'false'
         name: "{{ project_id + '-Bastion'}}"
-        networks:
-          - lable: "Network Adapter 1"
-            name: '{{ public_net }}'
-            state: present
-            connected: yes
-          - lable: "Network Adapter 2"
-            name: '{{ private_net }}'
-            state: present
-            connected: yes
+        network_name: '{{ item.network }}'
+        lable: ''{ iem.lable }}'
+        state: present
+        connected: yes
+      with_items:
+      - { network: "{{ public_net }}", label: "Network Adapter 1" }
+      - { network: "{{ private_net }}", label: "Network Adapter 2" }
       delegate_to: localhost
 
     - name: Add Bastion Disks
