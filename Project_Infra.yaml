@@ -7,7 +7,7 @@
     vcenter_username: "administrator@vsphere.reca"
     vcenter_password: "VMware1!"
     datacenter_name: "Datacenter"
-    folder_prefix: "Datacenter/vm/Project/"
+    folder_prefix: "/Datacenter/vm/Project/"
     esxi_hostname: "192.168.3.103"
     esxi_password: "VMware1!"
     esxi_username: "root"
