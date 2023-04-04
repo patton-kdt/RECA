@@ -49,11 +49,50 @@
       with_items:
       - { vmname: "{{ project_id + '-Bastion'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
       - { vmname: "{{ project_id + '-Bootstrap'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
-      - { vmname: "{{ project_id + '-Master-01'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
-      - { vmname: "{{ project_id + '-Master-02'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
-      - { vmname: "{{ project_id + '-Master-03'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
-      - { vmname: "{{ project_id + '-Worker-01'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
-      - { vmname: "{{ project_id + '-Worker-02'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
-      - { vmname: "{{ project_id + '-Worker-03'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso' }
+      - { vmname: "{{ project_id + '-Master-01'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhcos-412.86.202212081411-0-live.x86_64.iso' }
+      - { vmname: "{{ project_id + '-Master-02'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhcos-412.86.202212081411-0-live.x86_64.iso' }
+      - { vmname: "{{ project_id + '-Master-03'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhcos-412.86.202212081411-0-live.x86_64.iso' }
+      - { vmname: "{{ project_id + '-Worker-01'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhcos-412.86.202212081411-0-live.x86_64.iso' }
+      - { vmname: "{{ project_id + '-Worker-02'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhcos-412.86.202212081411-0-live.x86_64.iso' }
+      - { vmname: "{{ project_id + '-Worker-03'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: '[RECA-ESXi-03]\ISO\rhcos-412.86.202212081411-0-live.x86_64.iso' }
       delegate_to: localhost
       register: deploy_vm
+
+    - name: Change & Modify Bastion VM Network
+      community.vmware.vmware_guest_network:
+        hostname: "{{ vcenter_hostname }}"
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: 'false'
+        name: "{{ project_id + '-Bastion'}}"
+        networks:
+          - lable: "Network Adapter 1"
+            name: '{{ public_net }}'
+            state: present
+            connected: yes
+          - lable: "Network Adapter 2
+            name: '{{ private_net }}'
+            state: present
+            connected: yes
+      delegate_to: localhost
+
+    - name: Add Bastion Disks
+      community.vmware.vmware_guest_disk:
+        hostname: "{{ vcenter_hostname }}"
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: 'false'
+        name: "{{ project_id + '-Bastion'}}"
+        disk:
+        - size_mb: 200
+          type: thin
+          datastore: '{{ datastore_name }}'
+          state: present
+          scsi_controller: 1
+          unit_number: 1
+          scsi_type: 'paravirtual'
+          disk_mode: 'persistent'
+      delegate_to: localhost
+      register: disk_facts
