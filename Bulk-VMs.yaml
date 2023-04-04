@@ -1,0 +1,46 @@
+---
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: /bin/python3
+    project_id: "PojectTeam#1"
+    vcenter_hostname: "192.168.3.100"
+    vcenter_username: "administrator@vsphere.reca"
+    vcenter_password: "VMware1!"
+    datacenter_name: "Datacenter"
+    folder_prefix: "/Datacenter/vm/Project/"
+    esxi_hostname: "192.168.3.103"
+    esxi_password: "VMware1!"
+    esxi_username: "root"
+    public_net: "VM-192.168.3.x"
+    private_net: "{{ project_id + '-Openshift' }}"
+    datastore_name: "RECA-ESXi-03"
+
+  tasks: 
+    - name: Create a virtual machine on given ESXi hostname
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: 'false'
+        datacenter: '{{datacenter_name}}'
+        folder: '{{ folder_prefix + project_id }}'
+
+        name: '{{ item.vmname }}'
+        state: poweredoff
+        guest_id: '{{ item.guest_id }}'
+        esxi_hostname: "{{ esxi_hostname }}"
+        hardware:
+          num_cpus: '{{ item.cpus }}'
+          memory_mb: '{{ item.memory }}'
+          scsi: paravirtual
+        disk:
+        - size_gb: '{{ item.disk_gb }}'
+          type: thin
+          datastore: '{{ datastore_name }}'
+        networks:
+        - name: '{{ private_net }}'
+          device_type: vmxnet3
+      with_items:
+      - { vmname: "{{ project_id + '-Storage'}}", guest_id: freebsd64Guest, cpus: 4, memory: 16384,  disk_gb: 32 }
+      delegate_to: localhost
+      register: deploy_vm
