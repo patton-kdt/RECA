@@ -47,21 +47,13 @@
           type: iso
           iso_path: '{{ item.iso }}'
       with_items:
-      - { vmname: "{{ project_id + '-Bastion'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Bootstrap'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Master-01'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Master-02'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Master-03'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Worker-01'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Worker-02'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
-      - { vmname: "{{ project_id + '-Worker-03'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso
-" }
+      - { vmname: "{{ project_id + '-Bastion'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Bootstrap'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Master-01'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Master-02'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Master-03'}}", guest_id: rhel8_64Guest, cpus: 4, memory: 16384, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Worker-01'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Worker-02'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
+      - { vmname: "{{ project_id + '-Worker-03'}}", guest_id: rhel8_64Guest, cpus: 2, memory: 8192, disk_gb: 120, iso: "[RECA-ESXi-03]\ISO\rhel-8.5-x86_64-dvd.iso" }
       delegate_to: localhost
       register: deploy_vm
